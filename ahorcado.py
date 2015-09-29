@@ -17,7 +17,7 @@ def dibujarAhorcado(intentosFallidos):
     archivo = open(nombreArchivo, "r")
     print(archivo.read())
 
-def dibujarPalabra(palabra,letrasAcertadas):
+def dibujarLetra(palabra,letrasAcertadas):
     palabraConLetras = ""
     for letra in palabra:
         if letra in letrasAcertadas:
@@ -25,18 +25,6 @@ def dibujarPalabra(palabra,letrasAcertadas):
         else:
             palabraConLetras = palabraConLetras + "_" + " "
     print(palabraConLetras)
-
-##def juego():
-##    intentosFallidos = 0
-##    print(palabra)
-##    letra = input("Digite una letra: ")
-##    while sigueJuego(intentosPermitidos,palabra,letrasFallidas,letrasAcertadas):
-##        if letra in palabra:
-##            dibujarPalabra(palabra,letrasAcertadas)
-##        else:
-##            intentosFallidos += 1
-##            dibujarAhorcado(intentosFallidos)
-##            juego()
 
 abecedario = "abcdefghijklmnñopqrstuvwxyz"
 
@@ -46,19 +34,56 @@ def leerLetra(abecedario):
         print("Ingresó un caracter que no pertenece al abecedario, por favor intente de nuevo")
         leerLetra(abecedario)
     else:
-        if a in abecedario:
-            print("si")
+        if a.lower() in abecedario:
+            a = a.lower()
+            return a
 
-##while sigueJuego(intentosPermitidos,palabra,letrasFallidas,letrasAcertadas):
-##    letra = leerLetra(abecedario)
-##    if esta(letra,palabra):
-##        letrasAcertadas = agregar(letrasAcertadas,letra)
-##    else:
-##        letrasFallidas = letrasFallidas + letra
-##        dibujarAhorcado(len(letrasFallidas),intentosPermitidos)
-##        dibujarLetrasFallidas(letrasFallidas)
-##    dibujarPalabra(palabra,letrasAcertadas)
-##if gano(palabra,letrasAcertadas):
-##    resultado = "Gana"
-##else:
-##    resultado = "Pierde"
+def iguales(letrasAcertadas,palabra):
+    for letra in palabra:
+        if letra in letrasAcertadas:
+            iguales = True
+        else:
+            return False
+    return iguales
+
+def sigueJuego(intentosPermitidos,palabra,letrasFallidas,letrasAcertadas):
+    if len(letrasFallidas) > intentosPermitidos or iguales(letrasAcertadas,palabra):
+        return False
+    else:
+        return True
+
+def esta(letra,palabra):
+    if letra in palabra:
+        return True
+    else:
+        return False
+
+def gano(palabra,letrasAcertadas):
+    if iguales(letrasAcertadas,palabra):
+        return True
+    else:
+        return False
+
+def dibujarLetrasFallidas(letra):
+    print("----------------\n"+letra+"\n----------------")
+
+def juego():
+    palabra = escogerPalabraAlAzar()
+    letrasAcertadas = ""
+    letrasFallidas = ""
+    while sigueJuego(intentosPermitidos,palabra,letrasFallidas,letrasAcertadas):
+        letra = leerLetra(abecedario)
+        if esta(letra,palabra):
+            letrasAcertadas = letrasAcertadas + letra + " "
+        else:
+            letrasFallidas = letrasFallidas + letra
+            dibujarAhorcado(len(letrasFallidas))
+            dibujarLetrasFallidas(letrasFallidas)
+        dibujarLetra(palabra,letrasAcertadas)
+    if gano(palabra,letrasAcertadas):
+        print("Gana")
+    else:
+        if len(letrasFallidas) == intentosPermitidos:
+            print("Pierde")
+
+juego()
